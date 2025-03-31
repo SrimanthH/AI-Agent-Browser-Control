@@ -18,11 +18,10 @@ def going_tob_website(destination):
         run(playwright,destination)
 
 def extract_python_code(text):
-    # Define a regex pattern to match Python code (i.e., block of text with indentation)
-    pattern = re.compile(r'```python(.*?)```', re.DOTALL)  # The `re.DOTALL` flag allows the dot (.) to match newlines
+
+    pattern = re.compile(r'```python(.*?)```', re.DOTALL)  
     matches = pattern.findall(text)
     
-    # Return the extracted Python code
     return matches
 def going_to_website(destination):
     with sync_playwright() as playwright:
@@ -30,12 +29,10 @@ def going_to_website(destination):
 
 
 def generate(user_input_given):
-    # Prompt the user for the API key
-    api_key = os.getenv("GEMINI_API_KEY")
 
-    # Initialize the client using the provided API key
+    api_key = os.getenv("GEMINI_API_KEY")
     client = genai.Client(
-        api_key=api_key,  # Use the user-provided API key
+        api_key=api_key,  
     )
     user_input=user_input_given
 
@@ -57,13 +54,8 @@ def generate(user_input_given):
         contents=contents,
         config=generate_content_config,
     ):
-
-        """print(chunk.text, end="")"""
         respnse=respnse+chunk.text
-        """if code_block:
-            return code_block[0].strip()  # Return the first code block found"""
-    """print(respnse)"""
-    """print("I am done here")"""
+        
     start='```python\n'
     end='```'
     ans=(respnse.split(start))[1].split(end)[0]
@@ -74,7 +66,7 @@ def generate(user_input_given):
 url_match=""
 def execute_playwright_code(playwright_code):
     with sync_playwright() as p:
-        # Dynamically execute the extracted Python code
+
         print(playwright_code)
         exec(playwright_code, {'playwright': p, 'going_to_website': going_to_website})
         
@@ -84,15 +76,10 @@ def execute_playwright_code(playwright_code):
 if __name__ == "__main__":
     
     command = input("Enter command to automate browser task: ")
+    print("Generated Playwright Code:\n", playwright_code)
     
     playwright_code = generate(command)
     
-    if playwright_code:
-        print("Generated Playwright Code:\n", playwright_code)
-        execute_playwright_code(playwright_code)
-    else:
-        print("Failed to generate Playwright code.")
-
 
 """with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)  # Launch a Chromium browser (headless=False to see it)
